@@ -13,7 +13,7 @@
             <button type="button" class="close" data-dismiss="alert" area-label="close">
                 <span area-hidden-true>&times;</span>
             </button>
-        </div>
+            </div>
             {% endif %}
             <form action="" method="POST">
                 {% csrf_token  %}
@@ -32,7 +32,7 @@
                 <div class="form-group">
                     <input type="submit" class="btn btn-outline-success px-4" value="Signup">
                 </div>
-                <a class="card-link" href="">Already Registered ? Login</a>
+                <a class="card-link" href="{% url 'login' %}">Already Registered ? Login</a>
             </form>
         </div>
     </div>

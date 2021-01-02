@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.models import User
-from django.contrib import messages
+from django.contrib import messages, auth
 
 # Create your views here.
 def home(request):
@@ -8,7 +8,26 @@ def home(request):
 
 
 def login(request):
-    return render (request, 'login.html')
+    if not request.user.is_authenticated:
+        if request.method == "POST":
+            #handling the login
+            if request.POST['email'] and request.POST['password']:
+                try:
+                    user = User.objects.get(email = request.POST['email'])
+                    auth.login(request, user)
+                    if request.POST['next'] != '':
+                        return redirect(request.POST.get('next'))
+                    else:
+                        return redirect('/')
+                except User.DoesNotExist:
+                    return render(request, 'login.html', { 'error' : "User Does not exists!"})
+
+            else:
+                return render (request, 'login.html', { 'error' : "Empty Fields"})
+        else:   
+            return render(request, 'home.html')
+    else:
+        return redirect('/')
 
 def signup(request):
     if request.method == "POST":
@@ -38,5 +57,6 @@ def signup(request):
 
 
 
-# def login(request):
-#     return render (request, 'login.html')
+def logout(request):
+    auth.logout(request)
+    return redirect('/login')

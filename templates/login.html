@@ -32,6 +32,7 @@
                 <div class="form-group">
                     <input type="password" class="form-control" name="password" placeholder="Password" id="">
                 </div>       
+                <input type="hidden" name="next" value="{{ request.GET.next }}" >
                 <div class="form-group">
                     <input type="submit" class="btn btn-outline-success px-4" value="Login">
                 </div>
