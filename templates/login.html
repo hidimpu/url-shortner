@@ -8,35 +8,30 @@
             <h3>Login </h3>
 
             {% if messages %}
+            {% for msg in messages %}
+            <div class="alert alert-{{msg.tags}} alert-dismissible fade show" role="alert">
+                {{ msg }}
 
-                    {% for msg in msgs %}
-
-                    <div class="alert alert-{{msg.tags}} alert-dismissible fade show" role="alert">
-                      
-                        {{msg}}
-                    
-                    <button type="button" class="close" data-dismiss="alert" area-label="close">
-                        <span area-hidden-true>&times;</span>
-                    </button>
-                    </div>
-
-                    {% endfor %}
-
+                <button type="button" class="close" data-dismiss="alert" area-label="Close">
+                    <span area-hidden-true>&times;</span>
+                </button>
+            </div>
+            {% endfor %}
             {% endif %}
 
             <form action="{% url 'login' %}" method="POST">
                 {% csrf_token %}
                 <div class="form-group">
-                    <input type="email" class="form-control" name="email" placeholder="Email" id="">
+                    <input type="email" class="form-control" name="email" autocomplete="off" placeholder="Email" id="">
                 </div>
                 <div class="form-group">
                     <input type="password" class="form-control" name="password" placeholder="Password" id="">
-                </div>       
-                <input type="hidden" name="next" value="{{ request.GET.next }}" >
+                </div>
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
                 <div class="form-group">
                     <input type="submit" class="btn btn-outline-success px-4" value="Login">
                 </div>
-                <a class="card-link" href=" {% url 'signup' %}">New Here ? Signup</a>
+                <a class="card-link" href="{% url 'signup' %}">New Here ? Signup</a>
             </form>
         </div>
     </div>

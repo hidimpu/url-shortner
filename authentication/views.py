@@ -1,60 +1,56 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages, auth
 
 # Create your views here.
-def home(request):
-    return render(request, 'home.html')
 
 
 def login(request):
     if not request.user.is_authenticated:
         if request.method == "POST":
-            #handling the login
+            # handle login
             if request.POST['email'] and request.POST['password']:
                 try:
-                    user = User.objects.get(email = request.POST['email'])
+                    user = User.objects.get(email=request.POST['email'])
                     auth.login(request, user)
                     if request.POST['next'] != '':
                         return redirect(request.POST.get('next'))
                     else:
                         return redirect('/')
+                    return redirect('/')
                 except User.DoesNotExist:
-                    return render(request, 'login.html', { 'error' : "User Does not exists!"})
-
+                    return render(request, 'login.html', {'error': "User Doesn't Exist"})
             else:
-                return render (request, 'login.html', { 'error' : "Empty Fields"})
-        else:   
-            return render(request, 'home.html')
+                return render(request, 'login.html', {'error': "Empty Fields"})
+        else:
+            return render(request, 'login.html')
     else:
         return redirect('/')
 
+
 def signup(request):
     if request.method == "POST":
-        #SIGN IN HANDLING
+        # handle sign in
         if request.POST['password'] == request.POST['password2']:
             if request.POST['username'] and request.POST['email'] and request.POST['password']:
                 try:
-                    user = User.objects.get(email= request.POST['email'])
-                    return render(request, 'signup.html', { 'error' : "User already exists!"})
+                    user = User.objects.get(email=request.POST['email'])
+                    return render(request, 'signup.html', {'error': "User Already Exists"})
                 except User.DoesNotExist:
                     User.objects.create_user(
-                        username = request.POST['username'],
-                        email = request.POST['email'],
-                        password = request.POST['password']
+                        username=request.POST['username'],
+                        email=request.POST['email'],
+                        password=request.POST['password'],
                     )
-                    messages.success(request, "Signup Successful, <br> Login Here")
+                    messages.success(
+                        request, "Signup Successful <br> Login Here")
                     return redirect(login)
             else:
-                return render(request, 'signup.html', { 'error' : "Insert the Required Fields"})
+                return render(request, 'signup.html', {'error': "Empty Fields"})
         else:
-            return render(request, 'signup.html', { 'error' : "Passwords Don't Match"})
-        
-    
+            return render(request, 'signup.html', {'error': "Password's Don't Match"})
     else:
         return render(request, 'signup.html')
-
-
 
 
 def logout(request):

@@ -9,7 +9,19 @@
         </div>
         <div class="col-10 col-sm-10 col-md-6 mx-auto">
 
-            <form action="" method="POST">
+            {% if messages %}
+            {% for msg in messages %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ msg }}
+
+                <button type="button" class="close" data-dismiss="alert" area-label="Close">
+                    <span area-hidden-true>&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <form action="{% url 'generate' %}" method="POST">
                 {% csrf_token %}
                 <div class="form-group">
                     <input type="url" name="original" class="form-control" placeholder="Original Url">
@@ -32,7 +44,8 @@
 </div>
 
 
-<div class="container my-4">
+<!-- ==== As In Youtube ===  -->
+<!-- <div class="container my-4">
     <div class="row">
         <div class="col-12 text-center">
             <h4>Your Url's</h4>
@@ -42,12 +55,64 @@
        
         
         
-            
+            {% for u in urls %}
+
+               <div class="col-6">
+                Original : <a href="{{ u.original_url }}">{{ u.original_url }}</a> 
+                <p>Short <a href="http://localhost:8000/{{ u.short_query }}">http://localhost:8000/{{ u.short_query }}</a></p>
+                <p>Visits : {{ u.visits }}</p>
+               </div>
+
+                
+            {% endfor %}
     
    
     </div>
+</div> -->
+
+<!-- == Little Better View With Delete  -->
+
+<div class="container my-4">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h4>Your Url's</h4>
+        </div>
+    </div>
+    <div class="row justify-content-between">
+
+        {% for u in urls %}
+
+        <div class="col-10 col-sm-10 col-md-6 mb-2 mx-auto">
+
+            <div style="overflow: hidden;" class="customcontainer p-2">
+
+                <p style="text-overflow: ellipsis;">Original : <a href="{{ u.original_url }}" target="_blank"
+                        class="card-link">{{ u.original_url }}</a>
+                </p>
+
+                <p>Shorten : <a href="http://localhost:8000/{{ u.short_query }}" target="_blank"
+                        class="card-link">http://localhost:8000/{{ u.short_query }}</a></p>
+                <div class="row justify-content-between">
+                    <div class="col-6 col-sm-6 ">
+                        <h3>Visits : {{ u.visits }} </h3>
+                    </div>
+                    <div class="col-4">
+                        <form action="{% url 'deleteurl' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="delete" value="{{ u.short_query }}">
+                            <input type="submit" class="btn btn-danger" value="Delete">
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
 </div>
-</div>
+
 
 
 <style>
